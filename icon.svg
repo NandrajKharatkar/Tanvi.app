@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4f46e5" />
+      <stop offset="100%" stop-color="#1e1b4b" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity="0.3" />
+    </filter>
+  </defs>
+
+  <!-- Background rounded rectangle -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" />
+
+  <!-- Grid Blueprint lines background -->
+  <path d="M64 128h384M64 192h384M64 256h384M64 320h384M64 384h384M128 64v384M192 64v384M256 64v384M320 64v384M384 64v384"
+        stroke="#6366f1" stroke-width="2" stroke-opacity="0.25" stroke-dasharray="4 6" />
+
+  <!-- Measurement Triangle Ruler Shape -->
+  <g filter="url(#shadow)">
+    <!-- Main Triangle Ruler -->
+    <path d="M120 392 L392 392 L120 120 Z" fill="#ffffff" fill-opacity="0.95" stroke="#38bdf8" stroke-width="4" stroke-linejoin="round" />
+    
+    <!-- Inner Cutout -->
+    <path d="M168 356 L332 356 L168 192 Z" fill="url(#bgGrad)" stroke="#cbd5e1" stroke-width="2" />
+
+    <!-- Ruler Ticks Bottom -->
+    <path d="M150 392v-16 M180 392v-26 M210 392v-16 M240 392v-26 M270 392v-16 M300 392v-26 M330 392v-16 M360 392v-26" 
+          stroke="#4f46e5" stroke-width="3" stroke-linecap="round" />
+
+    <!-- Ruler Ticks Left -->
+    <path d="M120 360h16 M120 330h26 M120 300h16 M120 270h26 M120 240h16 M120 210h26 M120 180h16 M120 150h26" 
+          stroke="#4f46e5" stroke-width="3" stroke-linecap="round" />
+
+    <!-- Dimension Marker Badge -->
+    <circle cx="360" cy="150" r="54" fill="url(#accentGrad)" />
+    <!-- Caliper / Square symbol -->
+    <text x="360" y="162" font-family="Arial, sans-serif" font-weight="900" font-size="34" fill="#ffffff" text-anchor="middle">SqFt</text>
+  </g>
+</svg>

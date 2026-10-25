@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="hi" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Measurement Calculator Pro - Commercial Measurement & Quotation</title>
+    <meta name="description"
+        content="Commercial 6-Inch Rounding Measurement & Quotation Calculator for Glass, Marble, Granite, Aluminum Fabrication, Wood & Interior Works.">
+    <meta name="theme-color" content="#4f46e5">
+
+    <!-- PWA & Mobile Icons -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <link rel="apple-touch-icon" href="icon.svg">
+
+    <!-- Google Font: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Top Navigation Header -->
+        <header class="app-header">
+            <div class="brand-wrapper">
+                <div class="brand-icon">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M21.3 15.3l-9.6-9.6a1.5 1.5 0 0 0-2.1 0L2.7 12.6a1.5 1.5 0 0 0 0 2.1l9.6 9.6a1.5 1.5 0 0 0 2.1 0l6.9-6.9a1.5 1.5 0 0 0 0-2.1z" />
+                        <path d="m14.5 12.5 2-2" />
+                        <path d="m11.5 9.5 2-2" />
+                        <path d="m8.5 6.5 2-2" />
+                        <path d="m17.5 15.5 2-2" />
+                    </svg>
+                </div>
+                <div class="brand-title-wrap">
+                    <h1 id="txtAppTitle">Measurement Pro</h1>
+                    <div class="brand-subtitle">
+                        <span id="txtSubtitle">Commercial 6" Rule</span>
+                        <span class="rule-badge" onclick="openRuleModal()" id="txtRuleBadge">6" नियम</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <button class="icon-btn lang-btn" id="langToggleBtn" onclick="toggleLanguage()"
+                    title="भाषा बदलें / Change Language">
+                    <span id="currentLangLabel">🇮🇳 हिंदी</span>
+                </button>
+
+                <button class="icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Theme Toggle">
+                    <!-- Moon Icon -->
+                    <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="4" />
+                        <path
+                            d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Project Active Info Strip -->
+        <div class="project-bar">
+            <div>
+                <label style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; display: block;"
+                    id="txtProjectLabel">PROJECT / साइट का नाम</label>
+                <input type="text" id="projectName" class="project-name-input" value="Tanvi Residence"
+                    placeholder="जैसे: Flat 302, Office, Villa" onchange="saveCurrentProjectName()">
+            </div>
+            <button class="btn-sm" onclick="exportCSV()" title="Excel / CSV डाउनलोड">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                <span>CSV</span>
+            </button>
+        </div>
+
+        <!-- Add / Edit Work Input Card -->
+        <section class="card form-card">
+            <div class="card-header">
+                <div class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <rect width="18" height="18" x="3" y="3" rx="2" />
+                        <path d="M3 9h18" />
+                        <path d="M9 21V9" />
+                    </svg>
+                    <span id="txtFormHeading">नया नाप जोड़ें (Add Work)</span>
+                </div>
+                <span id="editModeIndicator"
+                    style="display:none; font-size: 0.75rem; background: var(--amber-light); color: var(--amber); padding: 2px 8px; border-radius: 99px; font-weight: 700;">Editing
+                    #<span id="editIdVal"></span></span>
+            </div>
+
+            <!-- Item Name & Quick Tag Chips -->
+            <div class="form-group full-col" style="margin-bottom: 12px;">
+                <label class="form-label" for="workName" id="txtWorkNameLabel">
+                    Work / आइटम का नाम
+                </label>
+                <div class="input-wrap">
+                    <input type="text" id="workName" placeholder="जैसे: Master Bed Window, Glass Door, Kitchen Top"
+                        autocomplete="off" oninput="updateLivePreview()">
+                </div>
+                <div class="tag-chips">
+                    <button type="button" class="tag-chip" onclick="setWorkName('Glass Door')">🚪 Door</button>
+                    <button type="button" class="tag-chip" onclick="setWorkName('Window')">🪟 Window</button>
+                    <button type="button" class="tag-chip" onclick="setWorkName('Partition')">🧱 Partition</button>
+                    <button type="button" class="tag-chip" onclick="setWorkName('Balcony Railing')">🛡️ Balcony</button>
+                    <button type="button" class="tag-chip" onclick="setWorkName('Mirror')">🪞 Mirror</button>
+                    <button type="button" class="tag-chip" onclick="setWorkName('Kitchen Slab')">🍳 Kitchen Top</button>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <!-- Height Input -->
+                <div class="form-group">
+                    <label class="form-label" for="height">
+                        <span id="txtHeightLabel">Height (ऊंचाई)</span>
+                        <span class="live-ft-tag" id="heightFtTag">0 ft</span>
+                    </label>
+                    <div class="input-wrap">
+                        <input type="number" id="height" step="any" min="0.01" inputmode="decimal"
+                            placeholder="इंच में (Inches)" oninput="handleDimensionInput('height')">
+                        <span class="input-unit">inch</span>
+                    </div>
+                    <div class="quick-fractions">
+                        <button type="button" class="fraction-btn" onclick="addFraction('height', 0.25)">+¼"</button>
+                        <button type="button" class="fraction-btn" onclick="addFraction('height', 0.5)">+½"</button>
+                        <button type="button" class="fraction-btn" onclick="addFraction('height', 0.75)">+¾"</button>
+                    </div>
+                </div>
+
+                <!-- Width Input -->
+                <div class="form-group">
+                    <label class="form-label" for="width">
+                        <span id="txtWidthLabel">Width (चौड़ाई)</span>
+                        <span class="live-ft-tag" id="widthFtTag">0 ft</span>
+                    </label>
+                    <div class="input-wrap">
+                        <input type="number" id="width" step="any" min="0.01" inputmode="decimal"
+                            placeholder="इंच में (Inches)" oninput="handleDimensionInput('width')">
+                        <span class="input-unit">inch</span>
+                    </div>
+                    <div class="quick-fractions">
+                        <button type="button" class="fraction-btn" onclick="addFraction('width', 0.25)">+¼"</button>
+                        <button type="button" class="fraction-btn" onclick="addFraction('width', 0.5)">+½"</button>
+                        <button type="button" class="fraction-btn" onclick="addFraction('width', 0.75)">+¾"</button>
+                    </div>
+                </div>
+
+                <!-- Quantity Stepper -->
+                <div class="form-group">
+                    <label class="form-label" id="txtQtyLabel">Quantity (संख्या / नग)</label>
+                    <div class="qty-stepper">
+                        <button type="button" onclick="changeQty(-1)">−</button>
+                        <input type="number" id="quantity" value="1" min="1" step="1" oninput="updateLivePreview()">
+                        <button type="button" onclick="changeQty(1)">+</button>
+                    </div>
+                </div>
+
+                <!-- Rate per Sq Ft -->
+                <div class="form-group">
+                    <label class="form-label" for="rate" id="txtRateLabel">Rate / दर (₹ / Sq Ft)</label>
+                    <div class="input-wrap">
+                        <input type="number" id="rate" step="any" min="0" placeholder="Optional (उदा. 150)"
+                            oninput="updateLivePreview()">
+                        <span class="input-unit">₹/sqft</span>
+                    </div>
+                </div>
+
+                <!-- Live Visual Preview Box -->
+                <div class="live-preview-box full-col">
+                    <div class="preview-visual-frame" title="Live Scale Preview">
+                        <div id="livePreviewRect" class="preview-rect" style="width: 50px; height: 50px;"></div>
+                    </div>
+                    <div class="preview-info">
+                        <div class="preview-sub-calc" id="liveDimCalc">दर्ज करें: 0" × 0" ➔ 0 ft × 0 ft</div>
+                        <div class="preview-sqft-val" id="liveAreaVal">0.00 Sq Ft</div>
+                        <div class="preview-price-tag" id="livePriceVal" style="display: none;">₹0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="margin-top: 16px;">
+                <button type="button" class="btn-primary" id="addWorkBtn" onclick="submitWork()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    <span id="txtAddBtnText">+ Add Work (नाप जोड़ें)</span>
+                </button>
+
+                <div class="form-edit-actions" id="editActionsRow">
+                    <button type="button" class="btn-secondary" style="flex:1;" onclick="cancelEdit()"
+                        id="txtCancelEditBtn">रद्द करें (Cancel)</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- KPI Summary Dashboard -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <span class="kpi-label" id="txtKpiTotalItems">Total Items</span>
+                <span class="kpi-val" id="kpiWorksCount">0</span>
+                <span class="kpi-sub" id="kpiQtyCount">0 Total Pcs</span>
+            </div>
+
+            <div class="kpi-card emerald">
+                <span class="kpi-label" id="txtKpiTotalSqFt">Total Billed Sq Ft</span>
+                <span class="kpi-val" id="kpiTotalSqFt" style="color: var(--emerald);">0.00</span>
+                <span class="kpi-sub" id="kpiActualDiff">Actual: 0.00 Sq Ft</span>
+            </div>
+
+            <div class="kpi-card amber">
+                <span class="kpi-label" id="txtKpiEstCost">Estimated Total</span>
+                <span class="kpi-val" id="kpiTotalCost" style="color: var(--amber);">₹0</span>
+                <span class="kpi-sub" id="kpiAvgRate">Avg: ₹0/sqft</span>
+            </div>
+        </div>
+
+        <!-- Measurements List Section -->
+        <section class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                        <polyline points="10 9 9 9 8 9" />
+                    </svg>
+                    <span id="txtListHeading">नाप सूची (Work List)</span>
+                </div>
+                <span id="workCountBadge" style="font-size: 0.8rem; font-weight: 700; color: var(--primary);">0
+                    Items</span>
+            </div>
+
+            <!-- Search & Sort Controls -->
+            <div class="list-toolbar">
+                <div class="search-box">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.3-4.3" />
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Search work / आइटम खोजें..."
+                        oninput="handleSearch()">
+                </div>
+            </div>
+
+            <!-- Dynamic List Container -->
+            <div id="workList">
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8">
+                            <rect width="18" height="18" x="3" y="3" rx="2" />
+                            <path d="M3 9h18" />
+                            <path d="M9 21V9" />
+                        </svg>
+                    </div>
+                    <p id="txtEmptyList">अभी कोई Work नहीं जोड़ा गया है। ऊपर से नाप दर्ज करें।</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Commercial Grand Total Banner -->
+        <section class="total-card">
+            <div class="total-card-sub" id="txtTotalBannerSub">Commercial Billed Total</div>
+            <div class="total-card-number" id="grandTotalSqFt">0.00 Sq Ft</div>
+            <div class="total-card-cost" id="grandTotalCost" style="display: none;">Total: ₹0</div>
+            <div class="total-meta-chips">
+                <span class="meta-chip" id="grandTotalPcsChip">Items: 0 (0 pcs)</span>
+                <span class="meta-chip" id="grandActualDiffChip">Commercial Gain: +0 Sq Ft</span>
+            </div>
+        </section>
+
+        <!-- Export & Share Action Grid -->
+        <div class="export-grid">
+            <!-- WhatsApp Share -->
+            <button type="button" class="export-btn whatsapp" onclick="shareWhatsApp()"
+                title="Send Quotation on WhatsApp">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.888 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                </svg>
+                <span id="txtBtnWhatsApp">WhatsApp</span>
+            </button>
+
+            <!-- Print / PDF -->
+            <button type="button" class="export-btn print" onclick="printQuotation()"
+                title="Print Quotation Slip or Save as PDF">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 6 2 18 2 18 9" />
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                    <rect width="12" height="8" x="6" y="14" />
+                </svg>
+                <span id="txtBtnPrint">Print / PDF</span>
+            </button>
+
+            <!-- Copy Report -->
+            <button type="button" class="export-btn copy" onclick="copyReport()" title="Copy Full Text Report">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                </svg>
+                <span id="txtBtnCopy">Copy Text</span>
+            </button>
+
+            <!-- Clear Project -->
+            <button type="button" class="export-btn clear" onclick="clearProject()"
+                title="Clear Current Project Measurements">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 6h18" />
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                    <line x1="10" y1="11" x2="10" y2="17" />
+                    <line x1="14" y1="11" x2="14" y2="17" />
+                </svg>
+                <span id="txtBtnClear">Clear</span>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Commercial Rule Explanation Modal -->
+    <div class="modal-overlay" id="ruleModal" onclick="closeModalOnBg(event, 'ruleModal')">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="txtRuleModalTitle">📐 6-इंच कमर्शियल नाप नियम</h3>
+                <button class="close-btn" onclick="closeRuleModal()">&times;</button>
+            </div>
+            <div style="font-size: 0.9rem; line-height: 1.7; color: var(--text-main);">
+                <p style="margin-bottom: 12px;" id="txtRuleP1">
+                    ग्लास, मार्बल, ग्रेनाइट, एल्युमिनियम और कारपेंटर वर्क में बिलिंग के लिए 6-इंच राउंडिंग का नियम उपयोग
+                    होता है:
+                </p>
+                <div
+                    style="background: var(--bg-card-alt); border-radius: 8px; padding: 12px; margin-bottom: 14px; border: 1px solid var(--border-color);">
+                    <ul
+                        style="list-style-type: none; padding-left: 0; display: flex; flex-direction: column; gap: 6px; font-weight: 600;">
+                        <li>📏 <strong>1" से 12" (1 फीट तक)</strong> = 1.0 फीट</li>
+                        <li>📏 <strong>13" से 18" (डेढ़ फीट तक)</strong> = 1.5 फीट</li>
+                        <li>📏 <strong>19" से 24" (दो फीट तक)</strong> = 2.0 फीट</li>
+                        <li>📏 <strong>25" से 30" (ढाई फीट तक)</strong> = 2.5 फीट</li>
+                        <li>📏 <strong>31" से 36" (तीन फीट तक)</strong> = 3.0 फीट</li>
+                        <li style="color: var(--primary);">✨ आगे हर 6 इंच पर 0.5 फीट बढ़ता है।</li>
+                    </ul>
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-muted);" id="txtRuleP2">
+                    इस ऐप में आपका यह कैलकुलेशन स्वचालित रूप से एकदम सही होता है जिससे समय और बिलिंग में कोई नुकसान नहीं
+                    होता।
+                </p>
+                <button class="btn-primary" style="margin-top: 16px;" onclick="closeRuleModal()">ठीक है (Got
+                    It)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Printable Invoice Slip Layout (Rendered for Print/PDF) -->
+    <div id="printSlip">
+        <div class="print-header">
+            <div>
+                <h2 style="font-size: 18pt; margin: 0; color: #1e1b4b;" id="printCoName">MEASUREMENT & ESTIMATION
+                    QUOTATION</h2>
+                <div style="font-size: 10pt; color: #555; margin-top: 4px;">Commercial 6-Inch Rule Bill</div>
+            </div>
+            <div style="text-align: right; font-size: 10pt;">
+                <div><strong>Project:</strong> <span id="printProjectName">Tanvi Residence</span></div>
+                <div><strong>Date:</strong> <span id="printDate">24-Oct-2026</span></div>
+            </div>
+        </div>
+
+        <table class="print-table">
+            <thead>
+                <tr>
+                    <th style="width: 30px;">#</th>
+                    <th>Work / Item</th>
+                    <th>Actual Size (Inches)</th>
+                    <th>Billed Size (Feet)</th>
+                    <th style="width: 45px; text-align: center;">Qty</th>
+                    <th style="text-align: right;">Area (SqFt)</th>
+                    <th style="text-align: right;">Rate (₹)</th>
+                    <th style="text-align: right;">Amount (₹)</th>
+                </tr>
+            </thead>
+            <tbody id="printTableBody">
+            </tbody>
+        </table>
+
+        <div class="print-total-box">
+            <div style="min-width: 260px; font-size: 11pt; line-height: 1.8;">
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Total Items / Pcs:</span>
+                    <strong id="printTotalQty">0</strong>
+                </div>
+                <div
+                    style="display: flex; justify-content: space-between; border-top: 1px solid #ccc; padding-top: 4px;">
+                    <span>Total Billed Sq Ft:</span>
+                    <strong style="font-size: 13pt; color: #047857;" id="printTotalSqFt">0.00 SqFt</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-top: 2px solid #000; padding-top: 6px; margin-top: 6px;"
+                    id="printAmountRow">
+                    <span>Grand Total Amount:</span>
+                    <strong style="font-size: 14pt; color: #1e1b4b;" id="printGrandTotal">₹0</strong>
+                </div>
+            </div>
+        </div>
+
+        <div
+            style="margin-top: 40px; display: flex; justify-content: space-between; font-size: 10pt; border-top: 1px dashed #aaa; padding-top: 20px;">
+            <div>Client Confirmation / Signature</div>
+            <div>Prepared By / Authorized Signature</div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Main JavaScript Logic -->
+    <script src="app.js"></script>
+
+    <script>
+        // Register Service Worker for offline capability
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(() => { });
+            });
+        }
+    </script>
+
+</body>
+
+</html>
